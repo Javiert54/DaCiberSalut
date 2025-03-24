@@ -1,5 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 import os
+from PIL import Image
+import io
+import json
+import mongoConnect
 
 app = Flask(__name__)
 
@@ -18,6 +22,30 @@ def about():
 def upload_file():
     return render_template("upload_file.html")
 
+
+def convert_image(file, resolution="768x768", changeResolution=False, changeFormat=True):
+    """
+    This function converts the image to the specified resolution
+    :param file: file to convert
+    :param resolution: resolution to convert to
+    :return: the converted image file
+    """
+    try:
+        width, height = map(int, resolution.split("x"))
+        img = Image.open(file)
+        img = img.convert("RGB")
+        if changeResolution:
+            img = img.resize((width, height), Image.ANTIALIAS)
+        if changeFormat:
+            output = io.BytesIO()
+            img.save(output, format="JPEG")
+            output.seek(0)
+            return output
+        return img
+    except Exception as e:
+        raise ValueError(f"Image conversion failed: {str(e)}")
+
+
 @app.route("/upload_file", methods=["POST"])
 def handle_file_upload():
     if "file" not in request.files:
@@ -28,11 +56,27 @@ def handle_file_upload():
         return jsonify({"error": "No selected file"}), 400
 
     if file:
-        file_path = os.path.join("storage", file.filename)
-        file.save(file_path)
+
+        # Get the original filename before conversion
+        original_filename = os.path.splitext(file.filename)[0]
+        
+        # Convert the file
+        converted_file = convert_image(file)  # Convert the image to 768x768 JPEG
+        print(f"File converted: {type(converted_file)}")
+        
+        # Define a new filename for the converted file
+        new_filename = f"{original_filename}.jpeg"
+        file_path = os.path.join("storage", new_filename)
+        
+        # Save the converted file
+        with open(file_path, "wb") as f:
+            f.write(converted_file.read())
+        
+        mongoConnect.upload2DB({"file_path": file_path, "file_name": new_filename})
         return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
 
     return jsonify({"error": "File upload failed"}), 500
+
 
 @app.route("/get_file/<file_name>")
 def get_file(file_name):
@@ -44,5 +88,5 @@ def get_file(file_name):
 
 @app.route("/get_file")
 def get_files():
-    files = os.listdir("storage")
+    files = mongoConnect.getDocument()
     return render_template("get_file.html", files=files)

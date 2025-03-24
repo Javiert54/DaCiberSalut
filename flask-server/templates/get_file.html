@@ -10,7 +10,10 @@
     <h1>Uploaded Files</h1>
     <ul id="fileList">
         {% for file in files %}
-            <li><a href="{{ url_for('get_file', file_name=file) }}">{{ file }}</a></li>
+            <li>
+                <img src="{{ url_for('static', filename='file') }}" alt="File" />
+                <a href="{{ url_for('get_file', file_name=file) }}">{{ file }}</a>
+            </li>
         {% endfor %}
     </ul>
     {% endblock %}
