@@ -71,8 +71,9 @@ def handle_file_upload():
         # Save the converted file
         with open(file_path, "wb") as f:
             f.write(converted_file.read())
-        
-        mongoConnect.upload2DB({"file_path": file_path, "file_name": new_filename})
+        document= {"file_path": file_path, "file_name": new_filename}
+        print(document)
+        mongoConnect.upload2DB(document)
         return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
 
     return jsonify({"error": "File upload failed"}), 500
