@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload File</title>
+    <script src="{{ url_for('static', filename='JS/upload_file.js') }}"></script>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <h1>Upload File</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" />
+        <button type="submit">Upload</button>
+    </form>
+    {% endblock %}
+</body>
+</html>
