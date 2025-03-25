@@ -86,11 +86,11 @@ def get_files(document_id):
         document = mongoConnect.getDocument(document_id)
 
         if document:
-            file_path = "static/storage/"+ document.get("file_name", "")
+            file_path = "storage/" + document.get("file_name", "")
             print(f"Document found: {document}")
             print(f"File path: {file_path}")
 
-            if os.path.exists(file_path):
+            if os.path.exists(os.path.join("static", file_path)):
                 print("File found in static/storage directory.")
                 return render_template("display_image.html", file_path=file_path)
             else:
