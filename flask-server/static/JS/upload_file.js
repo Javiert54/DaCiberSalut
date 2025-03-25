@@ -10,11 +10,16 @@ document.addEventListener("DOMContentLoaded", function() {
         const fileExtension = fileInput.files[0].name.split('.').pop().toLowerCase();
         if (!['jpg', 'jpeg', 'png', 'bmp'].includes(fileExtension)) {
             console.log("The only extensions allowed are jpg, jpeg, png, bmp");
+            document.getElementById("message").classList.remove("alert-success")
+            document.getElementById("message").classList.add("alert-danger")
             document.getElementById("message").innerHTML = "The only extensions allowed are jpg, jpeg, png, bmp";
             return false;
         } else {
+            document.getElementById("message").classList.remove("alert-danger")
+            document.getElementById("message").classList.add("alert-success")
             document.getElementById("message").innerHTML = "The Image has been uploaded successfully";
         }
+        document.getElementById("message").hidden = false
         fetch("/upload_file", {
             method: "POST",
             body: formData
