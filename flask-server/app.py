@@ -112,11 +112,7 @@ def get_file_page():
 def get_file_data():
     try:
         documents = mongoConnect.getDocument()
-        files = []
-        for document in documents:
-            file_path = os.path.join("static/storage", document.get("file_name", ""))
-            if os.path.exists(file_path):
-                files.append({"file_name": document.get("file_name", ""), "file_id": str(document.get("_id", ""))})
+        files = [{"file_name": doc["file_name"], "file_id": str(doc["_id"])} for doc in documents]
         return jsonify({"files": files}), 200
     except Exception as e:
         print(f"An error occurred: {str(e)}")

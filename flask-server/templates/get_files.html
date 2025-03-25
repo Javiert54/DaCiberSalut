@@ -5,11 +5,11 @@
     <script src="{{ url_for('static', filename='JS/get_files.js') }}"></script>
 </head>
 <body>
+    
     {% extends 'base.html' %}
     {% block content %}
-    <h1 class="title">Uploaded Files</h1>
-    <ul class="list-group" id="fileList">
-      </ul>
+    <h1>Uploaded Files</h1>
+    <ul class="list-group" id="fileList"></ul>
     {% endblock %}
 </body>
 </html>

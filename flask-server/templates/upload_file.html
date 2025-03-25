@@ -12,10 +12,12 @@
         <img id="preview" style="display:none;" alt="Image Preview">
     </div>
     <form id="uploadForm" enctype="multipart/form-data">
-        <input type="file" id="fileInput" name="file" />
-        <button type="submit">Upload</button>
-        <h4 id="message"></h4>
-    </form>
+        <div class="mb-3">
+          <label for="fileInput" class="form-label">Select file</label>
+          <input type="file" class="form-control" id="fileInput" name="file">
+        </div>
+        <button type="submit" class="btn btn-outline-primary">Upload</button>
+      </form>
     {% endblock %}
 </body>
-</html>
+</html> 
