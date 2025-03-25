@@ -23,7 +23,7 @@ def upload_file():
     return render_template("upload_file.html")
 
 
-def convert_image(file, resolution="768x768", changeResolution=False, changeFormat=True):
+def convert_image(file, resolution="768x768", changeResolution=False, changeFormat=True, format="JPEG"):
     """
     This function converts the image to the specified resolution
     :param file: file to convert
@@ -34,14 +34,16 @@ def convert_image(file, resolution="768x768", changeResolution=False, changeForm
         width, height = map(int, resolution.split("x"))
         img = Image.open(file)
         img = img.convert("RGB")
+        print(f"converting image to {resolution} {file.filename.split(".")[-1]}")
         if changeResolution:
             img = img.resize((width, height), Image.ANTIALIAS)
         if changeFormat:
             output = io.BytesIO()
-            img.save(output, format="JPEG")
+            img.save(output, format=format)
             output.seek(0)
-            return output
-        return img
+            # print(f"Image converted to {resolution} {format}")
+            return output, format
+        return img, file.filename.split(".")[-1]
     except Exception as e:
         raise ValueError(f"Image conversion failed: {str(e)}")
 
@@ -61,33 +63,57 @@ def handle_file_upload():
         original_filename = os.path.splitext(file.filename)[0]
         
         # Convert the file
-        converted_file = convert_image(file)  # Convert the image to 768x768 JPEG
+        converted_file, imageFormat = convert_image(file)  # Convert the image to 768x768 JPEG
         print(f"File converted: {type(converted_file)}")
         
         # Define a new filename for the converted file
-        new_filename = f"{original_filename}.jpeg"
+        new_filename = f"{original_filename}.{imageFormat.lower()}"
         file_path = os.path.join("storage", new_filename)
-        
         # Save the converted file
         with open(file_path, "wb") as f:
             f.write(converted_file.read())
-        document= {"file_path": file_path, "file_name": new_filename}
-        print(document)
+        document= {"file_name": new_filename}
         mongoConnect.upload2DB(document)
-        return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
+        return jsonify({"message": "File uploaded successfully to \"storage/\"", "file_path": new_filename}), 200
 
     return jsonify({"error": "File upload failed"}), 500
 
 
-@app.route("/get_file/<file_name>")
-def get_file(file_name):
-    file_path = os.path.join("storage", file_name)
-    if os.path.exists(file_path):
-        return jsonify({"file_path": file_path}), render_template("get_file.html"), 200
+@app.route("/get_files/<document_id>")
+def get_files(document_id):
+    try:
+        print(f"Getting file with ID: {document_id}")
+        document = mongoConnect.getDocument(document_id)
 
-    return jsonify({"error": "File not found"}), 404
+        if document:
+            file_path = os.path.join("storage", document.get("file_name", ""))
+            print(f"Document found: {document}")
+            print(f"File path: {file_path}")
 
-@app.route("/get_file")
-def get_files():
-    files = mongoConnect.getDocument()
-    return render_template("get_file.html", files=files)
+            if os.path.exists(file_path):
+                print("File found in storage directory.")
+                return render_template("display_image.html", file_path=file_path)
+            else:
+                print("File not found in storage directory.")
+                return jsonify({"error": "File not found in storage"}), 404
+        else:
+            print("Document not found in database.")
+            return jsonify({"error": "Document not found in database"}), 404
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500
+
+
+@app.route("/get_files")
+def get_file_page():
+    return render_template("get_files.html")
+
+@app.route("/get_file_data")
+def get_file_data():
+    try:
+        documents = mongoConnect.getAllDocuments()
+        files = [doc["file_name"] for doc in documents]
+        return jsonify({"files": files}), 200
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        return jsonify({"error": "Internal server error"}), 500

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Get Files</title>
+    <script src="{{ url_for('static', filename='JS/get_files.js') }}"></script>
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% block content %}
+    <h1>Uploaded Files</h1>
+    <ul id="fileList"></ul>
+    {% endblock %}
+</body>
+</html>

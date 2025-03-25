@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+from bson import ObjectId
 # URL de conexión a MongoDB (ajusta según tu configuración)
 mongo_url = "mongodb://localhost:27017/"
 
@@ -48,7 +48,7 @@ def getDocument(document_id=None, collection=db["cancerImages"]):
     try:
         if document_id:
             # Buscar el documento por su ID
-            documento = collection.find_one({"_id": document_id})
+            documento = collection.find_one({"_id": ObjectId(document_id)})
         else:
             # Obtener todos los documentos
             documento = list(collection.find())

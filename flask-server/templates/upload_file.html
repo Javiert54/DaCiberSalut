@@ -8,6 +8,9 @@
     {% extends 'base.html' %}
     {% block content %}
     <h1>Upload File</h1>
+    <div id="showImage">
+        <img id="preview" style="display:none;" alt="Image Preview">
+    </div>
     <form id="uploadForm" enctype="multipart/form-data">
         <input type="file" id="fileInput" name="file" />
         <button type="submit">Upload</button>
