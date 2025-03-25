@@ -7,10 +7,11 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             fileList.innerHTML = "";
             data.files.forEach(file => {
+                console.log(file);
                 const listItem = document.createElement("li");
                 const link = document.createElement("a");
-                link.href = `/get_files/${file}`;
-                link.textContent = file;
+                link.href = `/get_files/${file.file_id}`;
+                link.textContent = file.file_name;
                 listItem.appendChild(link);
                 fileList.appendChild(listItem);
             });

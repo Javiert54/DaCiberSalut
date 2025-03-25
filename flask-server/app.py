@@ -8,7 +8,7 @@ import mongoConnect
 app = Flask(__name__)
 
 # Ensure the storage directory exists
-os.makedirs("storage", exist_ok=True)
+os.makedirs("static/storage", exist_ok=True)
 
 @app.route("/")
 def home():
@@ -68,13 +68,13 @@ def handle_file_upload():
         
         # Define a new filename for the converted file
         new_filename = f"{original_filename}.{imageFormat.lower()}"
-        file_path = os.path.join("storage", new_filename)
+        file_path = os.path.join("static/storage", new_filename)
         # Save the converted file
         with open(file_path, "wb") as f:
             f.write(converted_file.read())
         document= {"file_name": new_filename}
         mongoConnect.upload2DB(document)
-        return jsonify({"message": "File uploaded successfully to \"storage/\"", "file_path": new_filename}), 200
+        return jsonify({"message": "File uploaded successfully to \"static/storage/\"", "file_path": new_filename}), 200
 
     return jsonify({"error": "File upload failed"}), 500
 
@@ -86,16 +86,16 @@ def get_files(document_id):
         document = mongoConnect.getDocument(document_id)
 
         if document:
-            file_path = os.path.join("storage", document.get("file_name", ""))
+            file_path = "static/storage/"+ document.get("file_name", "")
             print(f"Document found: {document}")
             print(f"File path: {file_path}")
 
             if os.path.exists(file_path):
-                print("File found in storage directory.")
+                print("File found in static/storage directory.")
                 return render_template("display_image.html", file_path=file_path)
             else:
-                print("File not found in storage directory.")
-                return jsonify({"error": "File not found in storage"}), 404
+                print("File not found in static/storage directory.")
+                return jsonify({"error": "File not found in static/storage"}), 404
         else:
             print("Document not found in database.")
             return jsonify({"error": "Document not found in database"}), 404
@@ -111,8 +111,12 @@ def get_file_page():
 @app.route("/get_file_data")
 def get_file_data():
     try:
-        documents = mongoConnect.getAllDocuments()
-        files = [doc["file_name"] for doc in documents]
+        documents = mongoConnect.getDocument()
+        files = []
+        for document in documents:
+            file_path = os.path.join("static/storage", document.get("file_name", ""))
+            if os.path.exists(file_path):
+                files.append({"file_name": document.get("file_name", ""), "file_id": str(document.get("_id", ""))})
         return jsonify({"files": files}), 200
     except Exception as e:
         print(f"An error occurred: {str(e)}")
