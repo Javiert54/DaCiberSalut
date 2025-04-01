@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Upload File</title>
-    <script src="{{ url_for('static', filename='JS/upload_file.js') }}"></script>
+  <title>Upload File</title>
+  <script src="{{ url_for('static', filename='JS/upload_file.js') }}"></script>
+  <link href="{{ url_for('static', filename='CSS/upload_file.css') }}" rel="stylesheet">
+  </script>
 </head>
+
 <body>
-    {% extends 'base.html' %}
-    {% block content %}
-    <h1>Upload File</h1>
-    <div id="showImage">
-        <img id="preview" style="display:none;" alt="Image Preview">
+  {% extends 'base.html' %}
+  {% block content %}
+  <h1 class="card-title display-4 text-primary">Upload Image</h1>
+
+  <hr class="border-primary">
+
+  <form id="uploadForm" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="fileInput" class="form-label fs-4">Select image</label>
+      <input type="file" class="form-control form-control-lg" id="fileInput" name="file" required>
     </div>
-    <form id="uploadForm" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label for="fileInput" class="form-label">Select file</label>
-          <input type="file" class="form-control" id="fileInput" name="file">
-        </div>
-        <button type="submit" class="btn btn-outline-primary">Upload</button>
-      </form>
-    <div class="alert" role="alert" id="message" hidden></div>
-    {% endblock %}
+
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary btn-lg">Upload</button>
+    </div>
+
+    <div class="alert mt-4" id="message" role="alert" hidden></div>
+  </form>
+  {% endblock %}
 </body>
-</html> 
+
+</html>

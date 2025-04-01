@@ -2,14 +2,36 @@
 <html>
 <head>
     <title>Get Files</title>
+    <link href="{{ url_for('static', filename='CSS/get_files.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='JS/get_files.js') }}"></script>
 </head>
 <body>
     
     {% extends 'base.html' %}
     {% block content %}
-    <h1>Uploaded Files</h1>
-    <ul class="list-group" id="fileList"></ul>
+    <h1 class="card-title display-4 text-primary">Uploaded Images</h1>
+    
+    <hr class="border-primary">
+    
+    <div class="container mt-4">
+      <div class="row" id="image-list"></div>
+    </div>
+
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="imageModalLabel">Detalles de la Imagen</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <img id="modalImage" src="" class="img-fluid mb-3" style="max-height: 400px;">
+                  <h6>Etiquetas:</h6>
+                  <ul id="tagList" class="list-group"></ul>
+              </div>
+          </div>
+      </div>
+  </div>
     {% endblock %}
 </body>
-</html>
+</html

@@ -1,0 +1,7 @@
+{
+    "X_resolution_size" : 512,
+    "Y_resolution_size" : 512,
+    "resize": true,
+    "color_mode": "IMREAD_GRAYSCALE"
+    
+}

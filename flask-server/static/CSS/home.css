@@ -1,0 +1,19 @@
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+#home-image {
+   width: 12%;
+}
+
+@media (max-width: 1440px) {
+    #home-image {
+        width: 30%;
+    }
+}
+@media (max-width: 767px) {
+    #home-image {
+        width: 50%;
+    }
+}

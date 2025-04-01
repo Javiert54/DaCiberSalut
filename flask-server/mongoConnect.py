@@ -69,6 +69,16 @@ def deleteDocument(document_id, collection=db["cancerImages"]):
     except Exception as e:
         raise ValueError(f"Error al eliminar el documento de la base de datos: {str(e)}")
     
-    
-    
-    
+def editDocument(document_id, document, collection=db["cancerImages"]):
+    """
+    This function edits a document in the MongoDB database
+    :param document_id: the document id
+    :param document: the document to edit
+    :return: the result of the edit
+    """
+    try:
+        # Editar el documento por su ID
+        resultado = collection.update_one({"_id": ObjectId(document_id)}, {"$set": document})
+        return resultado
+    except Exception as e:
+        raise ValueError(f"Error al editar el documento de la base de datos: {str(e)}")    
