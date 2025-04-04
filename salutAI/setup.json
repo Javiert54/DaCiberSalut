@@ -2,6 +2,9 @@
     "X_resolution_size" : 512,
     "Y_resolution_size" : 512,
     "resize": true,
-    "color_mode": "IMREAD_GRAYSCALE"
-    
+    "color_mode": "IMREAD_GRAYSCALE", 
+    "epochs": 100,
+    "batch_size": 32,
+    "learning_rate": 0.001,
+    "dropout_rate": 0.5
 }
