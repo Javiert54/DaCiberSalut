@@ -69,8 +69,9 @@ def handle_file_upload():
 @app.route("/get_files/<document_id>")
 def get_files(document_id):
     try:
-        print(f"Getting file with ID: {document_id}")
-        document = mongoConnect.getDocument(document_id)
+        documentID = document_id.document_id
+        print(f"Getting file with ID: {documentID}")
+        document = mongoConnect.getDocument(documentID)
 
         if document:
             file_path = "storage/" + document.get("file_name", "")
@@ -79,7 +80,7 @@ def get_files(document_id):
 
             if os.path.exists(os.path.join("static", file_path)):
                 print("File found in static/storage directory.")
-                return render_template("display_image.html", file_path=file_path)
+                return jsonify({"filepath": "static/"+file_path})
             else:
                 print("File not found in static/storage directory.")
                 return jsonify({"error": "File not found in static/storage"}), 404
@@ -133,3 +134,10 @@ def predict(image):
     model = tf.keras.models.load_model('../salutAI/model.h5')
     prediction = model.predict(image)
     return prediction
+
+
+@app.route("/analyze_image", methods=["POST"])
+def analyze_image():
+    imgSrc = request.get_json()['imgSrc']
+    converted_image = convert_image(imgSrc)
+    return {'img': converted_image}
