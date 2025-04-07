@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const imgHTML = `
                 <div class="col-md-4 col-sm-6"> 
                     <img src="/static/storage/${file.file_name}" id="${file.file_id}" 
-                        data-tags='[{"label": "Persona", "confidence": 0.8}, {"label": "Otra etiqueta", "confidence": 0.2}]' 
+                        data-tags="${file.file_prediction}"
                         class="clickable img-thumbnail">
                 </div>`;
 
@@ -28,17 +28,22 @@ document.addEventListener("DOMContentLoaded", function() {
             img.addEventListener("click", function () {                
                 document.getElementById("modalImage").src = this.src;
 
-                const tags = JSON.parse(this.getAttribute("data-tags"));
-                
+                const tags = JSON.parse(this.getAttribute("data-tags").replace(/'/g, '"'));
                 const tagList = document.getElementById("tagList");
-                tagList.innerHTML = ""; 
-                tags.forEach(tag => {
-                    const li = document.createElement("li");
-                    li.className = "list-group-item";
-                    li.textContent = `${tag.label} - Confianza: ${(tag.confidence * 100).toFixed(2)}%`;
-                    tagList.appendChild(li);
-                });
 
+                tagList.innerHTML = "";
+
+                Object.entries(tags).forEach(([label, probability]) => {
+                    tagList.innerHTML += `
+                    <div class="mb-3">
+                        <span class="fw-semibold">${label}</span>
+                        <div class="progress">
+                        <div class="progress-bar bg-info" style="width: ${probability}%;">${probability}%</div>
+                        </div>
+                    </div>
+                    `
+                });
+        
                 const modal = new bootstrap.Modal(document.getElementById("imageModal"));
                 modal.show();
             });

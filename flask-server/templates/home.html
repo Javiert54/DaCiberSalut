@@ -12,8 +12,6 @@
     {% block content %}
     <h1 class="card-title display-4 text-primary">Welcome to AI Cancer Diagnosis</h1>
 
-    <img src="{{ url_for('static', filename='images/colonca1.jpeg') }}" alt="Bienvenida" id="home-image">
-
     <hr class="border-primary">
 
     <p class="lead text-primary">
@@ -31,7 +29,7 @@
     </p>
 
     <div class="d-grid gap-2 col-6 mx-auto">
-        <a href="/get_files" class="btn btn-primary btn-lg">See Images</a>
+        <a href="/get_files_page" class="btn btn-primary btn-lg">See Results</a>
     </div>
     {% endblock %}
 </body>

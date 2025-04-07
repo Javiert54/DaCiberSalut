@@ -9,7 +9,7 @@
     
     {% extends 'base.html' %}
     {% block content %}
-    <h1 class="card-title display-4 text-primary">Uploaded Images</h1>
+    <h1 class="card-title display-4 text-primary">Results</h1>
     
     <hr class="border-primary">
     
@@ -19,18 +19,21 @@
 
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="imageModalLabel">Detalles de la Imagen</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body text-center">
-                  <img id="modalImage" src="" class="img-fluid mb-3" style="max-height: 400px;">
-                  <h6>Etiquetas:</h6>
-                  <ul id="tagList" class="list-group"></ul>
-                  <button type="button" class="btn btn-primary" id="analyze-image">Volver a analizar</button> 
-              </div>
+          <div class="modal-content shadow rounded-4 border-0">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+              <h5 class="modal-title" id="imageModalLabel">Resultados de la predicción</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+          
+            <div class="modal-body text-center p-4">
+              <img id="modalImage" src="" class="img-fluid mb-3" style="max-height: 400px;">
+              <div class="text-start" id="tagList"></div>
+              <button type="button" class="btn btn-outline-primary px-4" id="analyze-image">
+                Volver a analizar
+              </button>
+            </div>
           </div>
+          
       </div>
   </div>
     {% endblock %}

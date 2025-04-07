@@ -1,6 +1,14 @@
 {
+    "dirs" : {
+        "0" : "dataset/lung_colon_image_set/colon_image_sets/colon_aca",
+        "1" : "dataset/lung_colon_image_set/colon_image_sets/colon_n",
+        "2" : "dataset/lung_colon_image_set/lung_image_sets/lung_aca",
+        "3" : "dataset/lung_colon_image_set/lung_image_sets/lung_n",
+        "4" : "dataset/lung_colon_image_set/lung_image_sets/lung_scc"
+    },
     "X_resolution_size" : 512,
     "Y_resolution_size" : 512,
+    "output_dim": 5,
     "resize": true,
     "color_mode": "IMREAD_GRAYSCALE", 
     "epochs": 100,

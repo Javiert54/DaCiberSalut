@@ -1,6 +1,14 @@
+function message(message_element, type, message){
+    message_element.className = '';
+    message_element.classList.add("alert", type, "mt-4");
+    message_element.innerHTML = message;
+    message_element.hidden = false;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     const fileInput = document.getElementById('fileInput');
     const uploadForm = document.getElementById("uploadForm");
+    const message_element = document.getElementById("message")
 
     uploadForm.addEventListener("submit", function(event) {
         event.preventDefault();
@@ -9,32 +17,26 @@ document.addEventListener("DOMContentLoaded", function() {
         formData.append("file", fileInput.files[0]);
         
         if (!['jpg', 'jpeg', 'png', 'bmp'].includes(fileExtension)) {
-            console.log("The only extensions allowed are jpg, jpeg, png, bmp");
-            document.getElementById("message").classList.remove("alert-success");
-            document.getElementById("message").classList.add("alert-danger");
-            document.getElementById("message").innerHTML = "The only extensions allowed are jpg, jpeg, png, bmp";
-            document.getElementById("message").hidden = false;
+            message(message_element, "alert-danger", "The file must be an image.")
             return; 
         } else {
-            document.getElementById("message").classList.remove("alert-danger");
-            document.getElementById("message").classList.add("alert-info"); 
-            document.getElementById("message").innerHTML = "Processing image...";
-            document.getElementById("message").hidden = false;
+            message(message_element, "alert-info", "Processing image...")
         }
    
-        fetch("/upload_file", {
+        fetch("/analyze_image_api", {
             method: "POST",
             body: formData
         })
         .then(response => response.json())
         .then((data) => {
-            console.log(data)
+            if (data['error']){
+                message(message_element, "alert-danger", data['error'])
+            } else {
+                message(message_element, "alert-success", data['message'])
+            }
         })
-        .catch(() => {
-            document.getElementById("message").classList.remove("alert-info");
-            document.getElementById("message").classList.add("alert-danger");
-            document.getElementById("message").innerHTML = "An error occurred while processing the image.";
-            document.getElementById("message").hidden = false;
+        .catch((e) => {
+            message(message_element, "alert-danger", e.message)
         });
     });   
 });
