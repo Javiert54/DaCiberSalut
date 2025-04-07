@@ -114,8 +114,10 @@ def analyze_image(image, color_mode, output_dim):
     for i in range(len(percentages)):
         dir = dirs[f'{i}']
         label = dir.split("/")[-1]
-        prediction[label] = percentages[i]
+        label_name = setup['labels_names'][label]
+        prediction[label_name] = percentages[i]
 
+    print(prediction)
     return prediction
 
 # Ensure the storage directory exists
